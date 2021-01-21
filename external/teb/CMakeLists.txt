@@ -11,8 +11,8 @@ if (DEFINED TEB_DIR)
 else()
     set(dir_options
         GIT_REPOSITORY https://github.com/teb-model/teb
-        # TODO revert to tag after new release is out (need ninja fix)
-        GIT_TAG ninja-patch # 4.0.1
+        # TODO revert to tag after new release is out
+        GIT_TAG 23ca2c7b3561bbebcfa51f7fdd07f002bd6fc4ca
         )
 endif()
 

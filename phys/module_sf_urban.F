@@ -163,7 +163,6 @@ use module_wrf_error
    CHARACTER(LEN=12),ALLOCATABLE, DIMENSION(:)  :: TEB_COOL_COIL_TBL      
    CHARACTER(LEN=6), ALLOCATABLE, DIMENSION(:)  :: TEB_HEAT_COIL_TBL      
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_F_WATER_COND_TBL   
-   CHARACTER(LEN=4), ALLOCATABLE, DIMENSION(:)  :: TEB_HNATVENT_TBL       
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_ZNATVENT_TBL       
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_F_WASTE_CAN_TBL    
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_QIN_TBL            
@@ -184,8 +183,6 @@ use module_wrf_error
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_SHGC_TBL            
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_SHGC_SH_TBL         
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_U_WIN_TBL           
-   LOGICAL,          ALLOCATABLE, DIMENSION(:)  :: TEB_LSHADE_TBL          
-   LOGICAL                                      :: TEB_LSHADE_INITED   
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_ZSHADE_TBL          
    CHARACTER(LEN=3), ALLOCATABLE, DIMENSION(:)  :: TEB_CBEM_TBL            
    REAL,             ALLOCATABLE, DIMENSION(:)  :: TEB_FLOOR_HEIGHT_TBL    
@@ -529,7 +526,6 @@ use module_wrf_error
 #ifdef WRF_TEB
    ! External TEB library
    USE MODI_INI_CSTS,         ONLY: INI_CSTS
-   USE MODI_INIT_SURFCONSPHY, ONLY: INIT_SURFCONSPHY
 #endif
 
    IMPLICIT NONE
@@ -2420,8 +2416,6 @@ ENDIF
             if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_HEAT_COIL_TBL in urban_param_init')
             ALLOCATE( TEB_F_WATER_COND_TBL(ICATE), stat=allocate_status )
             if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_F_WATER_COND_TBL in urban_param_init')
-            ALLOCATE( TEB_HNATVENT_TBL(ICATE), stat=allocate_status )
-            if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_HNATVENT_TBL in urban_param_init')
             ALLOCATE( TEB_ZNATVENT_TBL(ICATE), stat=allocate_status )
             if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_ZNATVENT_TBL in urban_param_init')
             ALLOCATE( TEB_F_WASTE_CAN_TBL(ICATE), stat=allocate_status )
@@ -2462,8 +2456,6 @@ ENDIF
             if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_SHGC_SH_TBL in urban_param_init')
             ALLOCATE( TEB_U_WIN_TBL(ICATE), stat=allocate_status )
             if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_U_WIN_TBL in urban_param_init')
-            ALLOCATE( TEB_LSHADE_TBL(ICATE), stat=allocate_status )
-            if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_LSHADE_TBL in urban_param_init')
             ALLOCATE( TEB_ZSHADE_TBL(ICATE), stat=allocate_status )
             if(allocate_status /= 0) FATAL_ERROR('Error allocating TEB_ZSHADE_TBL in urban_param_init')
             ALLOCATE( TEB_CBEM_TBL(ICATE), stat=allocate_status )
@@ -2598,7 +2590,6 @@ ENDIF
             TEB_COOL_COIL_TBL      = repeat(UNINIT_CHAR, 12)
             TEB_HEAT_COIL_TBL      = repeat(UNINIT_CHAR, 6)
             TEB_F_WATER_COND_TBL   = UNINIT_REAL
-            TEB_HNATVENT_TBL       = repeat(UNINIT_CHAR, 4)
             TEB_ZNATVENT_TBL       = UNINIT_REAL
             TEB_F_WASTE_CAN_TBL    = UNINIT_REAL
             TEB_QIN_TBL            = UNINIT_REAL
@@ -2973,8 +2964,6 @@ ENDIF
          read(string(indx+1:),*)TEB_HEAT_COIL_TBL(1:icate)
       else if (name == "TEB_F_WATER_COND") then
          read(string(indx+1:),*)TEB_F_WATER_COND_TBL(1:icate)
-      else if (name == "TEB_HNATVENT") then
-         read(string(indx+1:),*)TEB_HNATVENT_TBL(1:icate)
       else if (name == "TEB_ZNATVENT") then
          read(string(indx+1:),*)TEB_ZNATVENT_TBL(1:icate)
       else if (name == "TEB_F_WASTE_CAN") then
@@ -3059,9 +3048,6 @@ ENDIF
          read(string(indx+1:),*)TEB_SHGC_SH_TBL(1:icate)
       else if (name == "TEB_U_WIN") then
          read(string(indx+1:),*)TEB_U_WIN_TBL(1:icate)
-      else if (name == "TEB_LSHADE") then
-         read(string(indx+1:),*)TEB_LSHADE_TBL(1:icate)
-         TEB_LSHADE_INITED = .TRUE.
       else if (name == "TEB_ZSHADE") then
          read(string(indx+1:),*)TEB_ZSHADE_TBL(1:icate)
       else if (name == "TEB_CBEM") then
@@ -3229,7 +3215,6 @@ ENDIF
       call check_init_string_array(TEB_COOL_COIL_TBL, "TEB_COOL_COIL")
       call check_init_string_array(TEB_HEAT_COIL_TBL, "TEB_HEAT_COIL")
       call check_init_real_array(TEB_F_WATER_COND_TBL, "TEB_F_WATER_COND")
-      call check_init_string_array(TEB_HNATVENT_TBL, "TEB_HNATVENT")
       call check_init_real_array(TEB_ZNATVENT_TBL, "TEB_ZNATVENT")
       call check_init_real_array(TEB_F_WASTE_CAN_TBL, "TEB_F_WASTE_CAN")
       call check_init_real_array(TEB_QIN_TBL, "TEB_QIN")
@@ -3250,7 +3235,6 @@ ENDIF
       call check_init_real_array(TEB_SHGC_TBL, "TEB_SHGC")
       call check_init_real_array(TEB_SHGC_SH_TBL, "TEB_SHGC_SH")
       call check_init_real_array(TEB_U_WIN_TBL, "TEB_U_WIN")
-      call check_init_logical(TEB_LSHADE_INITED, "TEB_LSHADE")
       call check_init_real_array(TEB_ZSHADE_TBL, "TEB_ZSHADE")
       call check_init_string_array(TEB_CBEM_TBL, "TEB_CBEM")
       call check_init_real_array(TEB_FLOOR_HEIGHT_TBL, "TEB_FLOOR_HEIGHT")
@@ -3278,7 +3262,6 @@ ENDIF
 #ifdef WRF_TEB
       ! initialize constants in external TEB library
       CALL INI_CSTS
-      CALL INIT_SURFCONSPHY
 #endif
    end if
 

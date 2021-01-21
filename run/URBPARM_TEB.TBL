@@ -75,13 +75,6 @@ TEB_FRAC_PANEL: 0.0 0.0 0.0
 TEB_PAR_RD_IRRIG: .FALSE. .FALSE. .FALSE.
 
 #
-# TEB_HNATVENT: flag to activate natural ventilation 'NONE', 'MANU', 'AUTO'
-#         (sf_urban_physics=4)
-#
-
-TEB_HNATVENT: NONE NONE NONE
-
-#
 # TEB_COOL_COIL: option for cooling device type ('IDEAL', 'DXCOIL', 'MinimalDX')
 #         (sf_urban_physics=4)
 #
@@ -509,13 +502,6 @@ TEB_U_WIN: 2.716 2.716 2.716
 
 # Shading devices
 ##############################################################################
-
-#
-# TEB_LSHADE: Flag to use shading devices
-#         (sf_urban_physics=4)
-#
-
-TEB_LSHADE: .FALSE. .FALSE. .FALSE.
 
 #
 # TEB_ZSHADE: flag to activate shading devices (-> REAL for i/o 0. or 1)
