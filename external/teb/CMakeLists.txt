@@ -11,8 +11,7 @@ if (DEFINED TEB_DIR)
 else()
     set(dir_options
         GIT_REPOSITORY https://github.com/teb-model/teb
-        # TODO revert to tag after new release is out
-        GIT_TAG 23ca2c7b3561bbebcfa51f7fdd07f002bd6fc4ca
+        GIT_TAG 4.1.2
         )
 endif()
 
